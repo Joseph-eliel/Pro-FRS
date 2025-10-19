@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Maintenance Interval Calculator - Rwanda Feeder Roads</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <h1>Pro-FRS</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#calculator">Calculator</a></li>
+                    <li><a id="toggle-about_link" href="#about">About</a></li>
+                    <li><a id="toggle-formula_link" href="#formula">Formula</a></li>
+                    <li><a id="contact-link" href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-buttons">
+                <button class="btn-secondary">Sign In</button>
+                <button class="btn-primary">Free Product Tour</button>
+            </div>
+        </div>
+    </header>
+    <section id="home" class="hello-section hero-banner">
+        <div class="hero-content">
+            <h2>Welcome to Pro-FRS</h2>
+            <p>This tool helps in the preliminary assessment of road maintenance needs by calculating the Proactive Feeder Road Scheduler (Pro-FRS) based on various road conditions, environmental factors, and traffic data. It provides insights into the current state of road segments and suggests potential maintenance strategies.</p>
+        </div>
+    </section>
+    <div class="container">
+        <main class="main-content">
+            <div class="container">
+                <div class="input-section">
+                    <div class="section-title">
+                        <span class="section-icon"><i class="fa-solid fa-location-dot"></i></span>
+                        <h2>Road Location Details</h2>
+                    </div>
+                    
+                    <div class="location-row">
+                        <div class="input-group">
+                            <label for="province">Province</label>
+                            <select id="province">
+                                <option value="">Select Province</option>
+                                <option value="kigali">Kigali City</option>
+                                <option value="northern">Northern Province</option>
+                                <option value="southern">Southern Province</option>
+                                <option value="eastern">Eastern Province</option>
+                                <option value="western">Western Province</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="district">District</label>
+                            <input type="text" id="district" placeholder="e.g., Rulindo">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="sector">Sector</label>
+                            <input type="text" id="sector" placeholder="e.g., Tumba">
+                        </div>
+                    </div>
+                    
+                    <div class="road-segment-row">
+                        <div class="input-group">
+                            <label for="road-from">Road From</label>
+                            <input type="text" id="road-from" placeholder="e.g., Tumba">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="road-to">Road To</label>
+                            <input type="text" id="road-to" placeholder="e.g., Buyoga">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="road-length">Length (km)</label>
+                            <input type="number" id="road-length" min="0" step="0.1" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="surface-material">Surface Material Type</label>
+                            <select id="surface-material">
+                                <option value="gravel">Gravel</option>
+                                <option value="laterite">Laterite</option>
+                                <option value="earth">Earth</option>
+                                <option value="stabilized">Stabilized Soil</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="calculator" class="input-section">
+                    <div class="section-title">
+                        <span class="section-icon"><i class="fa-solid fa-sliders"></i></span>
+                        <h2>Road Condition Parameters</h2>
+                    </div>
+                    
+                    <form id="calculator-form">
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="R">Rutting Severity Index (R)</label>
+                                <div class="input-with-info">
+                                    <input type="number" id="R" min="1" max="5" step="0.1" value="1">
+                                    <span class="info-icon">ⓘ
+                                        <div class="tooltip">
+                                            <strong>Rutting Severity Index</strong><br>
+                                            1 = Minimal (&lt;10mm), 2 = Slight (10-25mm), 3 = Moderate (25-50mm), 4 = Severe (50-75mm), 5 = Very Severe (&gt;75mm)
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="range-info">
+                                    <span>Minimal (1)</span>
+                                    <span>Severe (5)</span>
+                                </div>
+                                <div class="visual-indicator">
+                                    <div class="visual-marker" id="R-marker" style="left: 0%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="G">Gravel Loss (G) %</label>
+                                <div class="input-with-info">
+                                    <input type="number" id="G" min="0" max="100" step="0.1" value="0">
+                                    <span class="info-icon">ⓘ
+                                        <div class="tooltip">
+                                            <strong>Gravel Loss Percentage</strong><br>
+                                            Percentage of road surface area where gravel wearing course has been lost, exposing the base or subgrade.
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="range-info">
+                                    <span>None (0%)</span>
+                                    <span>Complete (100%)</span>
+                                </div>
+                                <div class="visual-indicator">
+                                    <div class="visual-marker" id="G-marker" style="left: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="P">Pothole Density (P)</label>
+                                <div class="input-with-info">
+                                    <input type="number" id="P" min="0" step="0.1" value="0">
+                                    <span class="info-icon">ⓘ
+                                        <div class="tooltip">
+                                            <strong>Potholes per 100 meters</strong><br>
+                                            Number of distinct depressions with minimum dimension of 150mm and depth of 25mm per 100m road segment.
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="range-info">Number of potholes per 100m segment</div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="D">Drainage Condition Index (D)</label>
+                                <div class="input-with-info">
+                                    <input type="number" id="D" min="1" max="5" step="0.1" value="1">
+                                    <span class="info-icon">ⓘ
+                                        <div class="tooltip">
+                                            <strong>Drainage Condition Index</strong><br>
+                                            1 = Excellent (clear drains), 2 = Good (minor issues), 3 = Fair (partial blockage), 4 = Poor (ineffective drains), 5 = Very Poor (absent/useless drains)
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="range-info">
+                                    <span>Excellent (1)</span>
+                                    <span>Very Poor (5)</span>
+                                </div>
+                                <div class="visual-indicator">
+                                    <div class="visual-marker" id="D-marker" style="left: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="section-title environmental-traffic">
+                            <span class="section-icon"><i class="fa-solid fa-cloud"></i></span>
+                            <h2>Environmental & Traffic Factors</h2>
+                        </div>
+                        
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="ADT">Average Daily Traffic (ADT)</label>
+                                <div class="input-with-info">
+                                    <input type="number" id="ADT" min="0" step="1" value="0">
+                                    <span class="info-icon">ⓘ
+                                        <div class="tooltip">
+                                            <strong>Average Daily Traffic</strong><br>
+                                            Average number of vehicles using the road per day. Based on manual traffic counts over a 7-day period.
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="range-info">Vehicles per day</div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="RF">Monthly Rainfall (RF)</label>
+                                <div class="input-with-info">
+                                    <input type="number" id="RF" min="0" step="1" value="0">
+                                    <span class="info-icon">ⓘ
+                                        <div class="tooltip">
+                                            <strong>Average Monthly Rainfall</strong><br>
+                                            Average monthly rainfall in millimeters. Data sourced from Rwanda Meteorology Agency (RMA).
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="range-info">Millimeters per month</div>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="action-buttons">
+                        <button type="button" class="btn-primary" id="calculate-btn">
+                            Calculate Maintenance Interval
+                        </button>
+                        <button type="button" class="btn-pdf" id="pdf-btn">
+                            Generate PDF Report
+                        </button>
+                        <button type="button" class="btn-sources" id="sources-btn">
+                            Parameter Sources
+                        </button>
+                        <button type="button" class="btn-secondary" id="reset-btn">
+                            Reset to Default
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="result-container" id="result-container">
+                    <h2>Maintenance Recommendation</h2>
+                    <div class="result-value" id="result">Enter parameters to calculate</div>
+                    <div class="result-breakdown" id="breakdown">
+                        <h3><span><i class="fa-solid fa-list-check"></i></span> Details</h3>
+                        <p id="months-result"><strong>Months:</strong> -</p>
+                        <p id="days-result"><strong>Days:</strong> -</p>
+                        <p id="total-days"><strong>Total:</strong> - days</p>
+                        <p id="health-score"><strong>Road Health Score:</strong> -/100</p>
+                        <p id="deterioration-rate"><strong>Deterioration Rate:</strong> - points/month</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggle Box for About This Tool -->
+            <div id="about" class="toggle-box">
+                <div class="toggle-header" id="toggle-about">
+                    <h3><span><i class="fa-solid fa-info-circle"></i></span> About This Tool</h3>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="toggle-content" id="toggle-about-content">
+                    <p>This Predictive Maintenance Time Estimator (PMTE) calculates the optimal maintenance interval for unpaved feeder roads based on the research conducted in Rulindo District, Rwanda. The tool implements a locally calibrated predictive formula developed through field studies and empirical data analysis.</p>
+                    
+                    <p><strong>Research Background:</strong> This tool is part of a final year project at Rwanda Polytechnic/Musanze College, Department of Civil Engineering - Highway Technology. The research addresses the challenge of reactive maintenance practices for feeder roads in Rwanda by providing a data-driven approach to maintenance planning.</p>
+                    
+                    <p><strong>Methodology:</strong> The predictive formula was developed through comprehensive field data collection, including road condition assessments, traffic counts, and climate data analysis. The coefficients were calibrated specifically for Rwandan conditions using empirical observations from the Tumba-Buyoga feeder road in Rulindo District.</p>
+                    
+                    <p><strong>Application:</strong> This tool is designed for use by road maintenance planners, district engineers, and infrastructure managers in Rwanda to optimize maintenance scheduling and resource allocation for feeder road networks.</p>
+                </div>
+            </div>
+            
+            <!-- Toggle Box for Formula Details -->
+            <div id="formula" class="toggle-box">
+                <div class="toggle-header" id="toggle-formula">
+                    <h3><span><i class="fa-solid fa-calculator"></i></span> Formula Details & Calculation</h3>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="toggle-content" id="toggle-formula-content">
+                    <div class="formula-explanation">
+                        <h4>Predictive Maintenance Time Formula</h4>
+                        <p><strong>T = (100 - (2×R) - (3×(G/100)) - (4×P) - (3×D)) / ((0.1×ADT) + (0.05×RF))</strong></p>
+                        
+                        <p>Where:</p>
+                        <ul>
+                            <li><strong>T</strong> = Time to Maintenance (months)</li>
+                            <li><strong>R</strong> = Rutting Severity Index (1-5 scale)</li>
+                            <li><strong>G</strong> = Gravel Loss Percentage (0-100%)</li>
+                            <li><strong>P</strong> = Pothole Density (number per 100m)</li>
+                            <li><strong>D</strong> = Drainage Condition Index (1-5 scale)</li>
+                            <li><strong>ADT</strong> = Average Daily Traffic (vehicles/day)</li>
+                            <li><strong>RF</strong> = Monthly Rainfall (mm/month)</li>
+                        </ul>
+                        
+                        <h4>Coefficient Justification</h4>
+                        <p>The coefficients in the formula were determined based on:</p>
+                        <ul>
+                            <li><strong>Potholes (4):</strong> Highest coefficient due to immediate safety impact and rapid deterioration acceleration</li>
+                            <li><strong>Drainage (3):</strong> Critical factor as poor drainage accelerates all other deterioration mechanisms</li>
+                            <li><strong>Gravel Loss (3):</strong> Significant impact on road structural integrity and riding quality</li>
+                            <li><strong>Rutting (2):</strong> Important but less critical than potholes and drainage issues</li>
+                            <li><strong>Traffic (0.1):</strong> Scaling factor to convert vehicle count to appropriate stress units</li>
+                            <li><strong>Rainfall (0.05):</strong> Scaling factor for rainfall impact, slightly lower than traffic</li>
+                        </ul>
+                    </div>
+                    
+                    <table class="parameter-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Description</th>
+                                <th>Units/Range</th>
+                                <th>Coefficient</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Rutting Severity Index (R)</td>
+                                <td>Measure of longitudinal depressions in the wheel path.</td>
+                                <td>1-5 (1=Minimal, 5=Very Severe)</td>
+                                <td>2</td>
+                            </tr>
+                            <tr>
+                                <td>Gravel Loss (G)</td>
+                                <td>Percentage of road surface area with lost gravel.</td>
+                                <td>0-100%</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>Pothole Density (P)</td>
+                                <td>Number of potholes per 100m segment.</td>
+                                <td>Number</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>Drainage Condition Index (D)</td>
+                                <td>Assessment of road drainage effectiveness.</td>
+                                <td>1-5 (1=Excellent, 5=Very Poor)</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>Average Daily Traffic (ADT)</td>
+                                <td>Average number of vehicles per day.</td>
+                                <td>Vehicles/day</td>
+                                <td>0.1</td>
+                            </tr>
+                            <tr>
+                                <td>Monthly Rainfall (RF)</td>
+                                <td>Average monthly rainfall.</td>
+                                <td>mm/month</td>
+                                <td>0.05</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+        <br>
+        <br>
+        <footer>
+            <p>Developed as part of Final Year Project - Rwanda Polytechnic / Musanze College</p>
+            <p>Department of Civil Engineering - Highway Technology | Academic Year 2024-2025</p>
+            <p>&copy; 2025 - Predictive Maintenance Formula for Feeder Roads in Rwanda</p>
+        </footer>
+        
+        <div id="sources-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2 class="modal-title">Parameter Sources & Methodology</h2>
+                <ul>
+                    <li><strong>Rutting Severity Index:</strong> Adapted from <a href="https://www.piarc.org/" target="_blank">PIARC (World Road Association)</a> guidelines for unpaved roads.</li>
+                    <li><strong>Gravel Loss:</strong> Based on <a href="https://www.trl.co.uk/" target="_blank">TRL (Transport Research Laboratory)</a> Overseas Road Note 6.</li>
+                    <li><strong>Pothole Density:</strong> Defined by <a href="https://www.asce.org/" target="_blank">ASCE (American Society of Civil Engineers)</a> standards for road condition assessment.</li>
+                    <li><strong>Drainage Condition Index:</strong> Developed from <a href="https://www.worldbank.org/" target="_blank">World Bank</a> rural road maintenance manuals.</li>
+                    <li><strong>Average Daily Traffic (ADT):</strong> Data collection methodology aligned with <a href="https://www.fhwa.dot.gov/" target="_blank">FHWA (Federal Highway Administration)</a> traffic monitoring guide.</li>
+                    <li><strong>Monthly Rainfall:</strong> Sourced from <a href="https://www.meteorwanda.gov.rw/" target="_blank">Rwanda Meteorology Agency (RMA)</a> historical climate data.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sources Modal -->
+    <div class="modal" id="sources-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-sources">&times;</span>
+            <h2 class="modal-title">Parameter Sources & Methodology</h2>
+            
+            <div class="source-item">
+                <h3>Rutting Severity Index (R)</h3>
+                <p><strong>Source:</strong> Field measurements using 1.2m straightedge and graduated ruler at 20m intervals along wheel paths.</p>
+                <p><strong>Methodology:</strong> Based on RS 267-2:2021 (Unpaved Roads - Maintenance) and adapted from AASHTO pavement condition rating systems.</p>
+                <p><strong>Scale Development:</strong> The 1-5 scale was calibrated through field observations on Tumba-Buyoga road, correlating rut depth with vehicle handling impact.</p>
+                <div class="source-reference">
+                    <strong>Reference:</strong> Rwanda Standards RS 267-2:2021; Paterson, W.D.O. (1987). Road Deterioration and Maintenance Effects.
+                </div>
+            </div>
+            
+            <div class="source-item">
+                <h3>Gravel Loss (G)</h3>
+                <p><strong>Source:</strong> Visual estimation over 10m segments of 100m sample sections.</p>
+                <p><strong>Methodology:</strong> Team consensus approach for percentage estimation, validated with photographic evidence and cross-verification.</p>
+                <p><strong>Calibration:</strong> Correlation with actual gravel volume measurements from sample sections.</p>
+                <div class="source-reference">
+                    <strong>Reference:</strong> Haas, R., Hudson, W.R., & Zaniewski, J. (1994). Modern Pavement Management; World Bank HDM-4 Model.
+                </div>
+            </div>
+            
+            <div class="source-item">
+                <h3>Pothole Density (P)</h3>
+                <p><strong>Source:</strong> Field count of depressions meeting minimum dimensions (150mm plan, 25mm depth).</p>
+                <p><strong>Methodology:</strong> Standardized counting procedure with chalk marking to avoid duplication.</p>
+                <p><strong>Definition:</strong> Operational definition developed based on safety impact and repair complexity considerations.</p>
+                <div class="source-reference">
+                    <strong>Reference:</strong> ASTM D6433-07: Standard Practice for Roads and Parking Lots Pavement Condition Index Surveys.
+                </div>
+            </div>
+            
+            <div class="source-item">
+                <h3>Drainage Condition Index (D)</h3>
+                <p><strong>Source:</strong> Visual assessment of side drains and road surface ponding evidence.</p>
+                <p><strong>Methodology:</strong> Composite rating based on drain functionality, siltation levels, and water persistence after rainfall.</p>
+                <p><strong>Scale Development:</strong> Correlation with observed deterioration rates in different drainage conditions.</p>
+                <div class="source-reference">
+                    <strong>Reference:</strong> Rwanda Standards RS 267-1:2021 (Unpaved Roads - Design and Construction); Cedergren, H.R. (1974). Drainage of Highway and Airfield Pavements.
+                </div>
+            </div>
+            
+            <div class="source-item">
+                <h3>Average Daily Traffic (ADT)</h3>
+                <p><strong>Source:</strong> 12-hour manual classified traffic counts (6:00 AM - 6:00 PM) over 7 consecutive days.</p>
+                <p><strong>Methodology:</strong> Expansion factors applied to convert 12-hour counts to 24-hour ADT based on vehicle type distributions.</p>
+                <p><strong>Validation:</strong> Cross-checked with district transport office records where available.</p>
+                <div class="source-reference">
+                    <strong>Reference:</strong> Rwanda Transport Development Agency (RTDA) Traffic Monitoring Guidelines; AASHTO Guide for Traffic Data Programs.
+                </div>
+            </div>
+            
+            <div class="source-item">
+                <h3>Monthly Rainfall (RF)</h3>
+                <p><strong>Source:</strong> Rwanda Meteorology Agency (RMA) historical data for Rulindo District.</p>
+                <p><strong>Methodology:</strong> 5-year monthly averages (2019-2023) to account for seasonal variations.</p>
+                <p><strong>Processing:</strong> Data cleaned for outliers and missing values using linear interpolation.</p>
+                <div class="source-reference">
+                    <strong>Reference:</strong> Rwanda Meteorology Agency Climate Data; World Bank Climate Change Knowledge Portal.
+                </div>
+            </div>
+            
+            <div class="source-item">
+                <h3>Formula Coefficients</h3>
+                <p><strong>Source:</strong> Calibrated through literature review and empirical field observations.</p>
+                <p><strong>Methodology:</strong> Relative impact scaling (1-5) based on defect severity and contribution to overall road deterioration.</p>
+                <p><strong>Validation:</strong> Sensitivity analysis and scenario testing against engineering judgment.</p>
+                <div class="source-reference">
+                    <strong>Reference:</strong> Paterson (1987) deterioration models; Oloo, S.Y. (2017) regression models for gravel roads; HDM-4 calibration studies.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="contact-modal" class="modal">
+        <div class="modal-content liquid-glass">
+            <span class="close-button">&times;</span>
+            <h2>Contact Us</h2>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="contact-name">Name:</label>
+                    <input type="text" id="contact-name" name="contact-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-email">Email:</label>
+                    <input type="email" id="contact-email" name="contact-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="contact-message">Message:</label>
+                    <textarea id="contact-message" name="contact-message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="button">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
