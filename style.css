@@ -2,15 +2,19 @@
 @import url('https://fonts.cdnfonts.com/css/times-new-roman');
 
 :root {
-    --primary-color: #777C6D;
-    --secondary-color: #B7B89F;
-    --accent-color: #e74c3c;
-    --warning-color: #f39c12;
-    --success-color: #2ecc71;
-    --light-color: #a0a0a0;
-    --dark-color: #494949;
-    --border-radius: 10px;
-    --box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    --primary-color: #2c5aa0;
+    --primary-dark: #1e3d72;
+    --primary-light: #4a7fd4;
+    --secondary-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --dark-color: #2c3e50;
+    --light-color: #f8f9fa;
+    --gray-color: #6c757d;
+    --border-color: #dee2e6;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --border-radius: 8px;
     --transition: all 0.3s ease;
 }
 
@@ -26,7 +30,6 @@ body {
     color: var(--dark-color);
     line-height: 1.6;
     min-height: 100vh;
-    /* display: flex; */
     justify-content: center;
     align-items: center;
 }
