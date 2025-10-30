@@ -192,6 +192,7 @@ function calculateMaintenance() {
     // Calculate pothole volume (in thousands of Cm³)
     const P_volume = (P_length * P_width * P_depth * 0.6) / 1000;
     p_vol = P_volume;
+    const V = parseFloat(P_volume) || 0;
     
     // Calculate road health score (numerator part of the formula)
     const healthScore = 100 - (2 * R) - (3 * (G / 100)) - (4 * P) - (0.8 * P_volume) - (3 * D);
@@ -287,8 +288,10 @@ async function generatePDFReport() {
         const G = parseFloat(document.getElementById('G')?.value) || 0;
         const P = parseFloat(document.getElementById('P')?.value) || 0;
         const D = parseFloat(document.getElementById('D')?.value) || 0;
+        const V = parseFloat(p_vol) || 0;
         const ADT = parseFloat(document.getElementById('ADT')?.value) || 0;
         const RF = parseFloat(document.getElementById('RF')?.value) || 0;
+        console.log("Pothole Volume: ", V);
         
         // Validate that we have actual calculation results
         if (totalDays === 0 || isNaN(totalDays)) {
