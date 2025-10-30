@@ -464,10 +464,10 @@ async function generatePDFReport() {
 
         yPos += 10;
         const params = [
-            { name: 'Rutting Severity Index (R)', value: R.toFixed(2), unit: '', risk: R > 4 ? 'High' : R > 2 ? 'Medium' : 'Low' },
-            { name: 'Gravel Loss (G)', value: G.toFixed(2), unit: '%', risk: G > 40 ? 'High' : G > 20 ? 'Medium' : 'Low' },
-            { name: 'Pothole Density (P)', value: P.toFixed(2), unit: 'per 100m', risk: P > 15 ? 'High' : P > 8 ? 'Medium' : 'Low' },
-            { name: 'Drainage Condition (D)', value: D.toFixed(2), unit: '', risk: D > 4 ? 'High' : D > 2 ? 'Medium' : 'Low' },
+            { name: 'Rutting Severity Index (R)', value: R.toFixed(2), unit: '', risk: R > 3 ? 'High' : R > 2 ? 'Medium' : 'Low' },
+            { name: 'Gravel Loss (G)', value: G.toFixed(2), unit: '%', risk: G > 39 ? 'High' : G > 10 ? 'Medium' : 'Low' },
+            { name: 'Pothole Density (P)', value: P.toFixed(2), unit: 'per 100m', risk: P > 15 ? 'High' : P > 6 ? 'Medium' : 'Low' },
+            { name: 'Drainage Condition (D)', value: D.toFixed(2), unit: '', risk: D > 3.5 ? 'High' : D > 2.5 ? 'Medium' : 'Low' },
             { name: 'Average Daily Traffic (ADT)', value: ADT.toFixed(0), unit: 'vehicles/day', risk: ADT > 500 ? 'High' : 'Normal' },
             { name: 'Monthly Rainfall (RF)', value: RF.toFixed(2), unit: 'mm/month', risk: RF > 150 ? 'High' : 'Normal' }
         ];
