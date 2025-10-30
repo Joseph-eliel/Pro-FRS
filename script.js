@@ -1,4 +1,5 @@
 const { jsPDF } = window.jspdf;
+let p_vol = 0;
 
 // DOM Content Loaded Event
 document.addEventListener('DOMContentLoaded', function() {
@@ -190,6 +191,7 @@ function calculateMaintenance() {
     
     // Calculate pothole volume (in thousands of Cm³)
     const P_volume = (P_length * P_width * P_depth * 0.6) / 1000;
+    p_vol = P_volume;
     
     // Calculate road health score (numerator part of the formula)
     const healthScore = 100 - (2 * R) - (3 * (G / 100)) - (4 * P) - (0.8 * P_volume) - (3 * D);
@@ -467,6 +469,7 @@ async function generatePDFReport() {
             { name: 'Rutting Severity Index (R)', value: R.toFixed(2), unit: '', risk: R > 3 ? 'High' : R > 2 ? 'Medium' : 'Low' },
             { name: 'Gravel Loss (G)', value: G.toFixed(2), unit: '%', risk: G > 39 ? 'High' : G > 10 ? 'Medium' : 'Low' },
             { name: 'Pothole Density (P)', value: P.toFixed(2), unit: 'per 100m', risk: P > 15 ? 'High' : P > 6 ? 'Medium' : 'Low' },
+            { name: 'Pothole Volume (P_Vol)', value: V.toFixed(2), unit: 'cm^3', risk: P > 250 ? 'High' : P > 20 ? 'Medium' : 'Low' },
             { name: 'Drainage Condition (D)', value: D.toFixed(2), unit: '', risk: D > 3.5 ? 'High' : D > 2.5 ? 'Medium' : 'Low' },
             { name: 'Average Daily Traffic (ADT)', value: ADT.toFixed(0), unit: 'vehicles/day', risk: ADT > 500 ? 'High' : 'Normal' },
             { name: 'Monthly Rainfall (RF)', value: RF.toFixed(2), unit: 'mm/month', risk: RF > 150 ? 'High' : 'Normal' }
@@ -537,7 +540,7 @@ async function generatePDFReport() {
                 '• Implement traffic management measures if necessary',
                 '• Prioritize drainage and pothole repairs'
             ];
-        } else if (totalDays < 90) {
+        } else if (totalDays < 180) {
             interpretation = 'PRIORITY MAINTENANCE: Schedule maintenance within the next quarter to maintain serviceability and prevent accelerated deterioration.';
             actions = [
                 '• Include in quarterly maintenance schedule',
@@ -576,7 +579,7 @@ async function generatePDFReport() {
         doc.text(`Pro-FRS v1.0 | Page 2 | Generated: ${dateStr}`, pageWidth / 2, 290, { align: 'center' });
 
         // Save PDF
-        const filename = `Road_Maintenance_Report_${roadFrom.replace(/\s+/g, '_')}_${today.getFullYear()}${(today.getMonth()+1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}.pdf`;
+        const filename = `Pro-FRS_Report_${roadFrom.replace(/\s+/g, '_')}_${today.getFullYear()}${(today.getMonth()+1).toString().padStart(2, '0')}${today.getDate().toString().padStart(2, '0')}.pdf`;
         doc.save(filename);
 
         // Success notification (if you have a notification system)
